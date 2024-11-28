@@ -1,5 +1,5 @@
 ### 1. Dockerfile:
-```Dockerfile
+
 # Dockerfile
 FROM node:18-alpine
 
@@ -21,4 +21,4 @@ EXPOSE 3000
 
 # Start the application
 CMD ["node", "index.js"]
-```
+
