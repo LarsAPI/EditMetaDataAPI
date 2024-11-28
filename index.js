@@ -1,5 +1,3 @@
-### 4. index.js:
-
 const express = require('express');
 const multer = require('multer');
 const { exec } = require('child_process');
