@@ -19,7 +19,7 @@ Die API läuft in einem Docker-Container und verwendet das ExifTool, um die Meta
 
 2. Starten Sie die Anwendung:
    ```bash
-   docker-compose up
+   docker compose up -d
    ```
 
 3. Die API sollte nun auf `http://localhost:3000` laufen.
