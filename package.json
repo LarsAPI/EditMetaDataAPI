@@ -1,5 +1,5 @@
 ### 3. package.json:
-```json
+
 {
   "name": "exiftool-api",
   "version": "1.0.0",
@@ -13,4 +13,4 @@
     "multer": "^1.4.5"
   }
 }
-```
+
