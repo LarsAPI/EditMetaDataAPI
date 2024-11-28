@@ -4,7 +4,7 @@ version: '3.8'
 services:
   exiftool-api:
     build: .
-    container_name: exiftool_api
+    container_name: editmetadata_api
     ports:
       - "3000:3000"
     volumes:
