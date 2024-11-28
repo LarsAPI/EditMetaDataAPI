@@ -1,7 +1,5 @@
-### 3. package.json:
-
 {
-  "name": "exiftool-api",
+  "name": "editmetadataapi",
   "version": "1.0.0",
   "description": "API Endpoint to add metadata to image files using ExifTool",
   "main": "index.js",
