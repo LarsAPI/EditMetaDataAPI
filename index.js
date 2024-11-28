@@ -1,5 +1,5 @@
 ### 4. index.js:
-```javascript
+
 const express = require('express');
 const multer = require('multer');
 const { exec } = require('child_process');
@@ -49,4 +49,4 @@ app.post('/upload', upload.single('image'), (req, res) => {
 app.listen(port, () => {
   console.log(`ExifTool API läuft auf Port ${port}`);
 });
-```
+
