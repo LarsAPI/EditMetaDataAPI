@@ -1,0 +1,12 @@
+### 2. docker-compose.yml:
+```yaml
+version: '3.8'
+services:
+  exiftool-api:
+    build: .
+    container_name: exiftool_api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./uploads:/app/uploads
+```
