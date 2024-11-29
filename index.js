@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const { exec } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
@@ -39,12 +40,16 @@ app.post('/upload', upload.single('image'), (req, res) => {
       console.error(`Stderr: ${stderr}`);
       return res.status(500).send(`Fehler beim Hinzufügen von Metadaten: ${stderr}`);
     }
-    res.send({ message: 'Metadaten wurden erfolgreich hinzugefügt', filePath: file.path });
+
+    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${path.basename(file.path)}`;
+    res.send({ message: 'Metadaten wurden erfolgreich hinzugefügt', fileUrl });
   });
 });
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Start server
 app.listen(port, () => {
   console.log(`ExifTool API läuft auf Port ${port}`);
 });
-
