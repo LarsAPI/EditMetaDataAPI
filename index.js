@@ -33,7 +33,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
   const originalFilePath = file.path;
   const newFilePath = path.join('uploads', file.originalname);
 
-  const command = `exiftool ${metadataArgs} -overwrite_original "${originalFilePath}"`;
+  const command = `exiftool ${metadataArgs} -overwrite_original -tagsFromFile @ -xmp:all "${originalFilePath}"`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
