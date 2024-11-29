@@ -19,21 +19,21 @@ app.post('/upload', upload.single('image'), (req, res) => {
     return res.status(400).send('Keine Bilddatei hochgeladen');
   }
 
-const metadata = {
-  Artist: artist || 'Unbekannt',
-  Copyright: copyright || '2024, Unbekannt',
-  Title: title || 'Bildtitel',
-  Subject: keywords || '' // XMP-Standard für Keywords
-};
+  const metadata = {
+    Artist: artist || 'Unbekannt',
+    Copyright: copyright || '2024, Unbekannt',
+    Title: title || 'Bildtitel',
+    Subject: keywords || '' // Verwende 'Subject' für Stichwörter, um die XMP-Kompatibilität zu erhöhen
+  };
 
   const metadataArgs = Object.entries(metadata)
-    .map(([key, value]) => `-${key}="${value}"`)
+    .map(([key, value]) => `-XMP:${key}="${value}"`)
     .join(' ');
 
   const originalFilePath = file.path;
   const newFilePath = path.join('uploads', file.originalname);
 
-  const command = `exiftool ${metadataArgs} -overwrite_original -tagsFromFile @ -xmp:all "${originalFilePath}"`;
+  const command = `exiftool ${metadataArgs} -overwrite_original "${originalFilePath}"`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
