@@ -19,12 +19,12 @@ app.post('/upload', upload.single('image'), (req, res) => {
     return res.status(400).send('Keine Bilddatei hochgeladen');
   }
 
-  const metadata = {
-    Artist: artist || 'Unbekannt',
-    Copyright: copyright || '2024, Unbekannt',
-    Title: title || 'Bildtitel',
-    Keywords: keywords || ''
-  };
+const metadata = {
+  Artist: artist || 'Unbekannt',
+  Copyright: copyright || '2024, Unbekannt',
+  Title: title || 'Bildtitel',
+  Subject: keywords || '' // XMP-Standard für Keywords
+};
 
   const metadataArgs = Object.entries(metadata)
     .map(([key, value]) => `-${key}="${value}"`)
