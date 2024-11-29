@@ -29,7 +29,10 @@ app.post('/upload', upload.single('image'), (req, res) => {
     .map(([key, value]) => `-${key}="${value}"`)
     .join(' ');
 
-  const command = `exiftool ${metadataArgs} "${file.path}"`;
+  const originalFilePath = file.path;
+  const newFilePath = path.join('uploads', `${path.parse(file.originalname).name}_with_metadata${path.extname(file.originalname)}`);
+
+  const command = `exiftool ${metadataArgs} -o "${newFilePath}" "${originalFilePath}"`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
@@ -41,7 +44,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
       return res.status(500).send(`Fehler beim Hinzufügen von Metadaten: ${stderr}`);
     }
 
-    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${path.basename(file.path)}`;
+    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${path.basename(newFilePath)}`;
     res.send({ message: 'Metadaten wurden erfolgreich hinzugefügt', fileUrl });
   });
 });
