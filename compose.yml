@@ -1,11 +1,10 @@
-### 2. docker-compose.yml:
+### 2. compose.yml:
 
 services:
-  exiftool-api:
+  editmetadata-api:
     build: .
     container_name: editmetadata_api
     ports:
       - "3000:3000"
     volumes:
       - ./uploads:/app/uploads
-
