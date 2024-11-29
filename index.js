@@ -30,9 +30,9 @@ app.post('/upload', upload.single('image'), (req, res) => {
     .join(' ');
 
   const originalFilePath = file.path;
-  const newFilePath = path.join('uploads', `${path.parse(file.originalname).name}_with_metadata${path.extname(file.originalname)}`);
+  const newFilePath = path.join('uploads', file.originalname);
 
-  const command = `exiftool ${metadataArgs} -o "${newFilePath}" "${originalFilePath}"`;
+  const command = `exiftool ${metadataArgs} -overwrite_original "${originalFilePath}"`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
@@ -44,8 +44,15 @@ app.post('/upload', upload.single('image'), (req, res) => {
       return res.status(500).send(`Fehler beim Hinzufügen von Metadaten: ${stderr}`);
     }
 
-    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${path.basename(newFilePath)}`;
-    res.send({ message: 'Metadaten wurden erfolgreich hinzugefügt', fileUrl });
+    fs.rename(originalFilePath, newFilePath, (renameError) => {
+      if (renameError) {
+        console.error(`Fehler beim Umbenennen der Datei: ${renameError.message}`);
+        return res.status(500).send(`Fehler beim Umbenennen der Datei: ${renameError.message}`);
+      }
+
+      const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${path.basename(newFilePath)}`;
+      res.send({ message: 'Metadaten wurden erfolgreich hinzugefügt', fileUrl });
+    });
   });
 });
 
