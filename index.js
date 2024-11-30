@@ -20,10 +20,11 @@ app.post('/upload', upload.single('image'), (req, res) => {
   }
 
   const metadata = {
-    Artist: artist || 'Unbekannt',
-    Copyright: copyright || '2024, Unbekannt',
-    Title: title || 'Bildtitel',
-    'XMP-dc:Subject': keywords ? keywords.split(',').map(kw => kw.trim()) : [] // Verwende 'XMP-dc:Subject' für Stichwörter
+    'XMP-dc:Title': title || 'Bildtitel',
+    'XMP-dc:Creator': artist || 'Unbekannt',
+    'XMP-dc:Description': description || '',
+    'XMP-dc:Rights': copyright || '2024, Unbekannt',
+    'XMP-dc:Subject': keywords ? keywords.split(',').map(kw => kw.trim()) : []
   };
 
   const metadataArgs = Object.entries(metadata)
@@ -31,7 +32,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
       if (Array.isArray(value)) {
         return `-${key}="${value.join(', ')}"`;
       }
-      return `-XMP:${key}="${value}"`;
+      return `-${key}="${value}"`;
     })
     .join(' ');
 
@@ -60,12 +61,4 @@ app.post('/upload', upload.single('image'), (req, res) => {
       res.send({ message: 'Metadaten wurden erfolgreich hinzugefügt', fileUrl });
     });
   });
-});
-
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Start server
-app.listen(port, () => {
-  console.log(`ExifTool API läuft auf Port ${port}`);
 });
