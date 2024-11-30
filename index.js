@@ -23,11 +23,16 @@ app.post('/upload', upload.single('image'), (req, res) => {
     Artist: artist || 'Unbekannt',
     Copyright: copyright || '2024, Unbekannt',
     Title: title || 'Bildtitel',
-    Subject: keywords || '' // Verwende 'Subject' für Stichwörter, um die XMP-Kompatibilität zu erhöhen
+    'XMP-dc:Subject': keywords ? keywords.split(',').map(kw => kw.trim()) : [] // Verwende 'XMP-dc:Subject' für Stichwörter
   };
 
   const metadataArgs = Object.entries(metadata)
-    .map(([key, value]) => `-XMP:${key}="${value}"`)
+    .map(([key, value]) => {
+      if (Array.isArray(value)) {
+        return `-${key}="${value.join(', ')}"`;
+      }
+      return `-XMP:${key}="${value}"`;
+    })
     .join(' ');
 
   const originalFilePath = file.path;
