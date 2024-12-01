@@ -62,3 +62,11 @@ app.post('/upload', upload.single('image'), (req, res) => {
     });
   });
 });
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Start server
+app.listen(port, () => {
+  console.log(`ExifTool API läuft auf Port ${port}`);
+});
