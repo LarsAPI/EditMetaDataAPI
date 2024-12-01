@@ -13,7 +13,7 @@ const upload = multer({ dest: 'uploads/' });
 // POST endpoint to upload an image and add metadata
 app.post('/upload', upload.single('image'), (req, res) => {
   const { file } = req;
-  const { artist, copyright, title, keywords } = req.body;
+  const { artist, copyright, title, keywords, description } = req.body;
 
   if (!file) {
     return res.status(400).send('Keine Bilddatei hochgeladen');
