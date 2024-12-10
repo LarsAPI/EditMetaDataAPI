@@ -29,9 +29,13 @@ Die API läuft in einem Docker-Container und verwendet das ExifTool, um die Meta
   - **Parameter**:
     - `image`: Die hochzuladende Bilddatei (erforderlich).
     - `artist`, `copyright`, `title`, `description`, `copyright`, `keywords`: Optional - die Metadaten, die zur Bilddatei hinzugefügt werden sollen.
+   
+- **Image Formats**
+  - PNG
+  - JPEG
 
 ## Beispiel
 Verwenden Sie `curl`, um eine Anfrage zu senden:
 bash
-curl -X POST -F "image=@/path/to/your/image.jpg" -F "artist=Dein Name" -F "copyright=2024, Dein Name" -F "title=Bildtitel" [http://localhost:3000/upload](http://editmetadataapi.linala.de/upload)
+curl -X POST -F "image=@/path/to/your/image.jpg" -F "artist=Dein Name" -F "copyright=2024, Dein Name" -F "title=Bildtitel" http://editmetadataapi.linala.de/upload
 
