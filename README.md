@@ -1,7 +1,7 @@
 # EditMetaDataAPI
 
 ### 5. README.md:
-```markdown
+
 # ExifTool API
 
 Dies ist eine einfache REST API, die das Hinzufügen von Metadaten zu Bilddateien ermöglicht.
@@ -12,15 +12,15 @@ Die API läuft in einem Docker-Container und verwendet das ExifTool, um die Meta
 
 ## Installation und Ausführung
 1. Klonen Sie das Repository:
-   ```bash
+   bash
    git clone https://github.com/LarsAPI/EditMetaDataAPI
    cd EditMetaDataAPI
-   ```
+   
 
 2. Starten Sie die Anwendung:
-   ```bash
+   bash
    docker compose up -d
-   ```
+   
 
 3. Die API sollte nun auf `http://localhost:3000` laufen.
 
@@ -32,6 +32,6 @@ Die API läuft in einem Docker-Container und verwendet das ExifTool, um die Meta
 
 ## Beispiel
 Verwenden Sie `curl`, um eine Anfrage zu senden:
-```bash
+bash
 curl -X POST -F "image=@/path/to/your/image.jpg" -F "artist=Dein Name" -F "copyright=2024, Dein Name" -F "title=Bildtitel" http://localhost:3000/upload
-```
+
