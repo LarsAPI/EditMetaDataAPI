@@ -7,11 +7,23 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
+// Middleware für Header-Authentifizierung
+const authenticate = (req, res, next) => {
+  const authHeader = req.headers['x-api-key']; // Auth-Token aus dem Header auslesen
+  const API_KEY = 'mein_geheimes_token'; // Setze hier deinen API-Schlüssel
+
+  if (!authHeader || authHeader !== API_KEY) {
+    return res.status(403).json({ message: 'Zugriff verweigert. Ungültiger API-Schlüssel.' });
+  }
+
+  next(); // Weiter zum nächsten Middleware oder Endpunkt
+};
+
 // Set up multer for file uploads
 const upload = multer({ dest: 'uploads/' });
 
 // POST endpoint to upload an image and add metadata
-app.post('/upload', upload.single('image'), (req, res) => {
+app.post('/upload', authenticate, upload.single('image'), (req, res) => {
   const { file } = req;
   const { artist, copyright, title, keywords, description } = req.body;
 
