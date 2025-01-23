@@ -22,6 +22,41 @@ const authenticate = (req, res, next) => {
 // Set up multer for file uploads
 const upload = multer({ dest: 'uploads/' });
 
+// Funktion zum Löschen alter Dateien
+const deleteOldFiles = () => {
+  const uploadsDir = path.join(__dirname, 'uploads');
+  const now = Date.now();
+  const maxAge = 3 * 24 * 60 * 60 * 1000; // 3 Tage in Millisekunden
+
+  fs.readdir(uploadsDir, (err, files) => {
+    if (err) {
+      return console.error(`Fehler beim Lesen des Upload-Ordners: ${err.message}`);
+    }
+
+    files.forEach((file) => {
+      const filePath = path.join(uploadsDir, file);
+
+      fs.stat(filePath, (err, stats) => {
+        if (err) {
+          return console.error(`Fehler beim Abrufen der Dateiinformationen: ${err.message}`);
+        }
+
+        if (now - stats.mtimeMs > maxAge) {
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              return console.error(`Fehler beim Löschen der Datei ${file}: ${err.message}`);
+            }
+            console.log(`Datei ${file} wurde gelöscht (älter als 3 Tage).`);
+          });
+        }
+      });
+    });
+  });
+};
+
+// Löschen alter Dateien alle 24 Stunden
+setInterval(deleteOldFiles, 24 * 60 * 60 * 1000);
+
 // POST endpoint to upload an image and add metadata
 app.post('/upload', authenticate, upload.single('image'), (req, res) => {
   const { file } = req;
