@@ -22,7 +22,7 @@ Die API läuft in einem Docker-Container und verwendet das ExifTool, um die Meta
    docker compose up -d
    
 
-4. Die API sollte nun auf `http://editmetadataapi.linala.de/upload` laufen.
+4. Die API sollte nun auf `http://localhost:3000/upload` laufen.
 
 ## API Endpunkte
 - **POST /upload**: Ermöglicht das Hochladen einer Bilddatei und das Hinzufügen von Metadaten.
