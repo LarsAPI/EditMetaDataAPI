@@ -7,6 +7,20 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
+// MIME-Type zu Dateiendung Mapping
+const mimeToExtension = {
+  'image/jpeg': '.jpg',
+  'image/jpg': '.jpg',
+  'image/png': '.png',
+  'image/gif': '.gif',
+  'image/webp': '.webp',
+  'image/bmp': '.bmp',
+  'image/tiff': '.tif',
+  'image/svg+xml': '.svg',
+  'image/heic': '.heic',
+  'image/heif': '.heif'
+};
+
 // Middleware für Header-Authentifizierung
 const authenticate = (req, res, next) => {
   const authHeader = req.headers['x-api-key']; // Auth-Token aus dem Header auslesen
@@ -21,6 +35,33 @@ const authenticate = (req, res, next) => {
 
 // Set up multer for file uploads
 const upload = multer({ dest: 'uploads/' });
+
+// Hilfsfunktion: Prüft ob Dateiname bereits eine Endung hat
+const hasFileExtension = (filename) => {
+  const ext = path.extname(filename);
+  return ext.length > 0;
+};
+
+// Hilfsfunktion: Fügt passende Dateiendung basierend auf MIME-Type hinzu
+const addExtensionIfNeeded = (filename, mimetype) => {
+  if (hasFileExtension(filename)) {
+    return filename; // Bereits eine Endung vorhanden
+  }
+
+  const extension = mimeToExtension[mimetype];
+  if (extension) {
+    return filename + extension;
+  }
+
+  // Fallback: versuche Endung aus MIME-Type zu extrahieren
+  const mimeSubtype = mimetype.split('/')[1];
+  if (mimeSubtype) {
+    return filename + '.' + mimeSubtype;
+  }
+
+  // Letzter Fallback: .bin für unbekannte Typen
+  return filename + '.bin';
+};
 
 // Funktion zum Löschen alter Dateien
 const deleteOldFiles = () => {
@@ -66,6 +107,11 @@ app.post('/upload', authenticate, upload.single('image'), (req, res) => {
     return res.status(400).send('Keine Bilddatei hochgeladen');
   }
 
+  // Originalname mit passender Endung versehen, falls nötig
+  const correctedFilename = addExtensionIfNeeded(file.originalname, file.mimetype);
+  
+  console.log(`Original: ${file.originalname}, MIME: ${file.mimetype}, Korrigiert: ${correctedFilename}`);
+
   const metadata = {
     'XMP-dc:Title': title || 'Bildtitel',
     'XMP-dc:Creator': artist || 'Unbekannt',
@@ -84,7 +130,7 @@ app.post('/upload', authenticate, upload.single('image'), (req, res) => {
     .join(' ');
 
   const originalFilePath = file.path;
-  const newFilePath = path.join('uploads', file.originalname);
+  const newFilePath = path.join('uploads', correctedFilename);
 
   const command = `exiftool ${metadataArgs} -overwrite_original "${originalFilePath}"`;
 
